@@ -20,6 +20,8 @@
 *.rar
 
 *.terraform
+*.terraform.*
+terraform.*
 
 credentials.*
 
