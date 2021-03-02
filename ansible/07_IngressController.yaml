@@ -1,0 +1,7 @@
+- hosts: master
+  gather_facts: no
+  remote_user: adminUsername
+  become: true
+  tasks:
+   - name: Desplegar ingress controller
+     command: kubectl apply -f https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/v1.5/deploy/haproxy-ingress.yaml

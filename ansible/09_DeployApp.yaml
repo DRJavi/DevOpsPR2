@@ -1,0 +1,58 @@
+- hosts: master
+  gather_facts: no
+  remote_user: adminUsername
+  become: yes
+  tasks:
+   - name: Create namespace webapp-volumes
+     command: kubectl create namespace webapp-volumes
+     ignore_errors: true
+   - name: Crear fichero nfs-pv.yaml
+     lineinfile:
+        path: nfs-pv.yaml
+        state: present
+        create: yes
+        line: "{{ item }}"
+     with_items:
+     - 'apiVersion: v1'
+     - 'kind: PersistentVolume'
+     - 'metadata:'
+     - '  name: nfs-pv'
+     - '  namespace: webapp-volumes'
+     - 'spec:'
+     - '  capacity:'
+     - '    storage: 10Gi'
+     - '  volumeMode: Filesystem'
+     - '  accessModes:'
+     - '    - ReadWriteMany'
+     - '  persistentVolumeReclaimPolicy: Recycle'
+     - '  storageClassName: nfs'
+     - '  mountOptions:'
+     - '    - hard'
+     - '    - nfsvers=4.1'
+     - '  nfs:'
+     - '    path: /srv/nfs'
+     - '    server: 10.0.1.10'
+   - name: Definir persistent volume
+     command: kubectl apply -f nfs-pv.yaml
+   - name: Crear fichero nfs-pvc.yaml
+     lineinfile:
+        path: nfs-pvc.yaml
+        state: present
+        create: yes
+        line: "{{ item }}"
+     with_items:
+     - 'apiVersion: v1'
+     - 'kind: PersistentVolumeClaim'
+     - 'metadata:'
+     - '  name: nfs-pvc'
+     - '  namespace: webapp-volumes'
+     - 'spec:'
+     - '  storageClassName: nfs'
+     - '  accessModes:'
+     - '    - ReadWriteMany'
+     - '  resources:'
+     - '    requests:'
+     - '      storage: 2Gi'
+   - name: Claim
+     command: kubectl apply -f nfs-pvc.yaml
+

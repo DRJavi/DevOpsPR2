@@ -1,0 +1,9 @@
+- hosts: worker.local, master.local
+  remote_user: ansible
+  tasks:
+    - name: hacer un ping
+      command: echo holaaaaaaaaaaa
+      register: salida_comando
+    - set_fact:
+        string_to_echo: "{{salida_comando.stdout}}"
+    - debug: msg="{{string_to_echo}}"

@@ -1,0 +1,31 @@
+- hosts: all
+  vars_files:
+     - group_vars/commons.yaml
+  remote_user: ansible
+  become: true
+  tasks:
+   - name: update dnf
+     dnf:
+       name: "*"
+       state: latest
+   - name: Set timezone to Europe/Madrid
+     timezone:
+       name: Europe/Madrid
+   - name: Install chrony
+     dnf:
+       name: chrony
+       state: latest
+   - name: Enable and Start chrony Service
+     service:
+       name=chronyd state=started enabled=yes
+   - name: Enable ntp
+     command: /usr/bin/timedatectl set-ntp true
+   - name: Deactivate SELinux
+     replace:
+       path: /etc/selinux/config
+       regexp: '=enforcing'
+       replace: "=disabled"       
+   - name: Install ...
+     dnf:
+       name: "{{ commmons_rpms }}"
+       state: present

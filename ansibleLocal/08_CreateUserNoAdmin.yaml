@@ -1,0 +1,28 @@
+- hosts: master.local
+  vars_files:
+     - group_vars/commons.yaml
+  gather_facts: no
+  remote_user: ansible
+  become: true
+  tasks:
+   - name: Create user kubeadmin
+     user:
+        name: kubeadmin
+        state: present
+        password: "{{ kubeadmin_pass | password_hash('sha512')}}"
+   - name: Create dir /home/kubeadmin/.kube
+     file:
+        path: /home/kubeadmin/.kube
+        state: directory
+   - name: Copy admin.conf a .kube/config
+     command: cp /etc/kubernetes/admin.conf /home/kubeadmin/.kube/config
+   - name: Permisos a config
+     shell: 'chown kubeadmin. /home/kubeadmin/.kube/config'
+   - name: Configurar repositorio de kubernetes
+     lineinfile:
+        path: /etc/sudoers.d/kubeadmin
+        state: present
+        line: "ALL ALL=(ALL) NOPASSWD: ALL"
+
+
+

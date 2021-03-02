@@ -1,0 +1,5 @@
+commmons_rpms: ['nfs-utils', 'nfs4-acl-tools', 'wget']
+nfs_rpms: ['nfs-utils', 'net-tools']
+kube_rpms: ['kubelet', 'kubeadm', 'kubectl']
+kubeadm_join: 'kubeadm join 10.0.1.10:6443 --token hc7q4g.375k7w4fe5znxcl6 --discovery-token-ca-cert-hash sha256:7ca293005091b9ba672b1e77807bac5bdb7cb7a8ee5fc3fc9b20cbcb2f83a0d5'
+kubeadmin_pass: 'kubeadmin'
