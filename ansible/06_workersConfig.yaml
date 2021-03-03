@@ -4,21 +4,6 @@
   gather_facts: no
   remote_user: adminUsername
   become: true
-  tasks:
-   - name: Add port 10250/tcp
-     firewalld:
-        port: 10250/tcp
-        permanent: yes
-        state: enabled
-        immediate: yes
-   - name: Add port 30000-32767/tcp
-     firewalld:
-        port: 30000-32767/tcp
-        permanent: yes
-        state: enabled
-        immediate: yes
-        zone: public
-   - name: Reload firewall-cmd
-     command: firewall-cmd --reload
-   - name: Unir al cluster de kubernetes
-     command: "{{kubeadm_join}}"
+  roles:
+    - configWorkers
+

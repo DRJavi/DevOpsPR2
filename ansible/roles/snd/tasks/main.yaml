@@ -1,0 +1,16 @@
+- name: Add port 8285/udp
+  firewalld:
+     port: 8285/udp
+     permanent: yes
+     state: enabled
+     immediate: yes
+- name: Add port 8472/udp
+  firewalld:
+     port: 8472/udp
+     permanent: yes
+     state: enabled
+     immediate: yes
+- name: Reload firewall-cmd
+  command: firewall-cmd --reload
+- name: Download canal.yaml
+  command: kubectl apply -f https://docs.projectcalico.org/manifests/canal.yaml

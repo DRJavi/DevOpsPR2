@@ -3,45 +3,5 @@
      - group_vars/commons.yaml
   remote_user: adminUsername
   become: true
-  tasks:
-   - name: Install nfs
-     dnf:
-       name: "{{ nfs_rpms }}"
-       state: present
-   - name: Enable and Start nfs Service
-     service:
-       name=nfs-server state=started enabled=yes
-   - name: Create dir nfs
-     file:
-        path: /srv/nfs
-        state: directory 
-   - name: Modify nfs exports
-     lineinfile:
-        path: /etc/exports
-        state: present
-        line: "{{ item }}"
-     with_items:
-     - '/srv/nfs      10.0.1.11(rw,sync)'
-     - '/srv/nfs      10.0.1.10(rw,sync)'
-   - name: Apply nfs exports config
-     shell: 'exportfs -r && exportfs -s'
-   - name: Permit traffic in default zone for nfs
-     firewalld:
-        service: nfs
-        permanent: yes
-        state: enabled
-        immediate: yes
-   - name: Permit traffic in default zone for rpc-bind
-     firewalld:
-        service: rpc-bind
-        permanent: yes
-        state: enabled
-        immediate: yes
-   - name: Permit traffic in default zone for mountd
-     firewalld:
-        service: mountd
-        permanent: yes
-        state: enabled
-        immediate: yes
-   - name: Reload firewall
-     command: firewall-cmd --reload
+  roles:
+    - nfs

@@ -1,0 +1,13 @@
+- name: Create namespace webapp-volumes
+  command: kubectl create namespace webapp-volumes
+  ignore_errors: true
+- name: Definir persistent volume
+  command: kubectl apply -f nfs-pv.yaml
+- name: Claim nfs-pvc.yaml
+  command: kubectl apply -f nfs-pvc.yaml
+- name: Deploy
+  command: kubectl apply -f webapp-volumes.yaml
+- name: Get pods
+  command: kubectl get pods --namespace=webapp-volumes -o wide
+  register: command_out
+- debug: msg="{{command_out.stdout}}"
